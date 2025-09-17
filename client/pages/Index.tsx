@@ -73,6 +73,13 @@ function Markets({ account }: { account: Address | null }) {
   const [decimals, setDecimals] = useState<Record<string, number>>({});
   const [balances, setBalances] = useState<Record<string, string>>({});
 
+  // Send token modal state
+  const [sendOpen, setSendOpen] = useState(false);
+  const [sendTokenAddr, setSendTokenAddr] = useState<Address | null>(null);
+  const [sendAmount, setSendAmount] = useState("");
+  const [sendTo, setSendTo] = useState("");
+  const [sending, setSending] = useState(false);
+
   useEffect(() => {
     async function loadTokenMeta() {
       for (const addr of tokenAddresses) {
@@ -112,6 +119,46 @@ function Markets({ account }: { account: Address | null }) {
     loadBalances();
   }, [account, tokenAddresses, decimals]);
 
+  async function openSend(addr: Address) {
+    setSendTokenAddr(addr);
+    setSendAmount("");
+    setSendTo("");
+    setSendOpen(true);
+  }
+
+  async function sendToken() {
+    if (!sendTokenAddr || !sendTo || !sendAmount) return alert("Please provide recipient and amount");
+    const eth = (window as any).ethereum;
+    if (!eth) return alert("No wallet detected");
+    try {
+      setSending(true);
+      const fromAccounts = await eth.request({ method: "eth_requestAccounts" });
+      const from = fromAccounts?.[0];
+      if (!from) throw new Error("No account available");
+
+      const dec = decimals[sendTokenAddr] ?? 18;
+      const value = parseUnits(sendAmount, dec);
+      // encode calldata for transfer
+      const { encodeFunctionData } = await import("viem");
+      const data = encodeFunctionData({ abi: ERC20_ABI as any, functionName: "transfer", args: [sendTo, value] });
+
+      const params = [{ from, to: sendTokenAddr, data }];
+      const txHash = await eth.request({ method: "eth_sendTransaction", params });
+      alert(`Transaction submitted: ${txHash}`);
+      setSendOpen(false);
+      // refresh balances after a short delay
+      setTimeout(() => {
+        // re-run balances load by toggling account state (simpler: reload page)
+        window.location.reload();
+      }, 3000);
+    } catch (err: any) {
+      console.error(err);
+      alert(`Send failed: ${err?.message ?? String(err)}`);
+    } finally {
+      setSending(false);
+    }
+  }
+
   return (
     <div className="container mx-auto">
       <div className="flex items-end justify-between gap-6 flex-wrap">
@@ -139,14 +186,34 @@ function Markets({ account }: { account: Address | null }) {
                 <div className="text-sm text-muted-foreground">Your balance</div>
                 <div className="font-mono font-semibold">{bal ? Number(bal).toFixed(4) : "–"} {sym}</div>
               </div>
-              <div className="mt-4 grid grid-cols-2 gap-3">
+              <div className="mt-4 grid grid-cols-3 gap-3">
                 <Button disabled className="bg-gradient-to-r from-cyan-500 to-fuchsia-500 text-white">Supply</Button>
                 <Button variant="outline" disabled>Borrow</Button>
+                <Button onClick={() => openSend(addr)} className="bg-white/6">Send</Button>
               </div>
             </div>
           );
         })}
       </div>
+
+      {/* Send modal */}
+      {sendOpen && sendTokenAddr && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="w-full max-w-lg rounded-xl bg-card/90 p-6">
+            <h3 className="text-lg font-semibold">Send {symbols[sendTokenAddr] ?? 'Token'}</h3>
+            <div className="mt-4 grid gap-3">
+              <label className="text-sm">Recipient address</label>
+              <input value={sendTo} onChange={(e) => setSendTo(e.target.value)} className="w-full rounded-md border p-2" placeholder="0x..." />
+              <label className="text-sm">Amount</label>
+              <input value={sendAmount} onChange={(e) => setSendAmount(e.target.value)} className="w-full rounded-md border p-2" placeholder="0.0" />
+              <div className="flex gap-2 justify-end mt-4">
+                <Button variant="outline" onClick={() => setSendOpen(false)}>Cancel</Button>
+                <Button onClick={sendToken} className="bg-gradient-to-r from-cyan-500 to-fuchsia-500 text-white" disabled={sending}>Confirm</Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
