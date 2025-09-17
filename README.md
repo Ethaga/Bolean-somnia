@@ -6,8 +6,6 @@
 The live app is available here: 
 👉 https://bolean.netlify.app/
 
-# pitch deck: https://docs.google.com/presentation/d/1IP0ysmU07-KPT8gPXvRCkpque3Otv03G/edit?usp=sharing&ouid=108673152518857918711&rtpof=true&sd=true
-
 ---
 
 ## ✨ Features
@@ -46,6 +44,7 @@ For major changes, please open an issue first to discuss what you would like to 
 
 
 ---
+# pitch deck: https://docs.google.com/presentation/d/1IP0ysmU07-KPT8gPXvRCkpque3Otv03G/edit?usp=sharing&ouid=108673152518857918711&rtpof=true&sd=true
 
 
 
