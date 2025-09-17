@@ -23,7 +23,6 @@ export function createServer() {
   // JSON-RPC proxy to Somnia RPC to avoid CORS issues from the browser
   // Accepts any JSON-RPC payload and forwards to the configured Somnia RPC URL.
   // Set SOMNIA_RPC_URL in env to override the default endpoint.
-  const { handleRpcProxy } = await import("./routes/rpc");
   app.post("/api/rpc", handleRpcProxy);
 
   return app;
