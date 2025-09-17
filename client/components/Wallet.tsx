@@ -118,6 +118,11 @@ export function WalletConnect() {
       <Button onClick={connect} variant="secondary" className="font-semibold">
         {label}
       </Button>
+      {account && (
+        <Button variant="ghost" onClick={disconnect} className="text-sm">
+          Disconnect
+        </Button>
+      )}
       {!isOnSomnia && (
         <Button onClick={switchToSomnia} className="bg-gradient-to-r from-cyan-500 to-fuchsia-500 text-white">
           Switch to Somnia
