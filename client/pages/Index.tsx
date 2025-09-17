@@ -344,13 +344,19 @@ export default function Index() {
 
   useEffect(() => {
     const eth = (window as any).ethereum;
-    if (!eth) return;
-    eth.request({ method: "eth_accounts" }).then((accs: string[]) => {
-      if (accs?.[0]) setAccount(accs[0] as Address);
-    });
-    const onAcc = (accs: string[]) => setAccount((accs?.[0] as Address) ?? null);
-    eth.on?.("accountsChanged", onAcc);
-    return () => eth.removeListener?.("accountsChanged", onAcc);
+    if (eth) {
+      eth.request({ method: "eth_accounts" }).then((accs: string[]) => {
+        if (accs?.[0]) setAccount(accs[0] as Address);
+      });
+      const onAcc = (accs: string[]) => setAccount((accs?.[0] as Address) ?? null);
+      eth.on?.("accountsChanged", onAcc);
+      return () => eth.removeListener?.("accountsChanged", onAcc);
+    }
+
+    // listen for wallet component changes (dispatched by WalletConnect)
+    const handler = (e: any) => setAccount((e?.detail as Address) ?? null);
+    window.addEventListener("bolean:accountChanged", handler as EventListener);
+    return () => window.removeEventListener("bolean:accountChanged", handler as EventListener);
   }, []);
 
   return (
