@@ -121,6 +121,9 @@ function Markets({ account }: { account: Address | null }) {
 
   useEffect(() => {
     loadBalances();
+    const handler = () => loadBalances();
+    window.addEventListener("bolean:refreshBalances", handler);
+    return () => window.removeEventListener("bolean:refreshBalances", handler);
   }, [account, tokenAddresses, decimals]);
 
   async function openSend(addr: Address) {
