@@ -99,24 +99,26 @@ function Markets({ account }: { account: Address | null }) {
     loadTokenMeta();
   }, [tokenAddresses]);
 
-  useEffect(() => {
-    async function loadBalances() {
-      if (!account) return setBalances({});
-      for (const addr of tokenAddresses) {
-        try {
-          const dec = decimals[addr] ?? 18;
-          const bal = (await publicClient.readContract({
-            address: addr,
-            abi: ERC20_ABI,
-            functionName: "balanceOf",
-            args: [getAddress(account)],
-          })) as bigint;
-          setBalances((b) => ({ ...b, [addr]: formatUnits(bal, dec) }));
-        } catch (e) {
-          // ignore per-token errors
-        }
+  async function loadBalances() {
+    if (!account) return setBalances({});
+    for (const addr of tokenAddresses) {
+      try {
+        const dec = decimals[addr] ?? 18;
+        const bal = (await publicClient.readContract({
+          address: addr,
+          abi: ERC20_ABI,
+          functionName: "balanceOf",
+          args: [getAddress(account)],
+        })) as bigint;
+        setBalances((b) => ({ ...b, [addr]: formatUnits(bal, dec) }));
+      } catch (e) {
+        // ignore per-token errors
+        setBalances((b) => ({ ...b, [addr]: "0" }));
       }
     }
+  }
+
+  useEffect(() => {
     loadBalances();
   }, [account, tokenAddresses, decimals]);
 
