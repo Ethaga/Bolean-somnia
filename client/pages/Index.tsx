@@ -12,7 +12,7 @@ import {
   type Address,
 } from "viem";
 
-const publicClient = createPublicClient({ chain: somniaTestnet, transport: http() });
+const publicClient = createPublicClient({ chain: somniaTestnet, transport: http({ url: '/api/rpc' }) });
 
 function Section({ id, className, children }: React.PropsWithChildren<{ id: string; className?: string }>) {
   return (
