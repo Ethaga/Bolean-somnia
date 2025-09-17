@@ -105,15 +105,38 @@ function Markets({ account }: { account: Address | null }) {
     for (const addr of tokenAddresses) {
       try {
         const dec = decimals[addr] ?? 18;
-        const bal = (await publicClient.readContract({
-          address: addr,
-          abi: ERC20_ABI,
-          functionName: "balanceOf",
-          args: [getAddress(account)],
-        })) as bigint;
-        setBalances((b) => ({ ...b, [addr]: formatUnits(bal, dec) }));
+        try {
+          const bal = (await publicClient.readContract({
+            address: addr,
+            abi: ERC20_ABI,
+            functionName: "balanceOf",
+            args: [getAddress(account)],
+          })) as bigint;
+          setBalances((b) => ({ ...b, [addr]: formatUnits(bal, dec) }));
+          continue;
+        } catch (err) {
+          // fallback to eth_call via injected provider if server RPC failed
+        }
+
+        const eth = (window as any).ethereum;
+        if (eth) {
+          try {
+            const { encodeFunctionData } = await import("viem");
+            const data = encodeFunctionData({ abi: ERC20_ABI as any, functionName: "balanceOf", args: [getAddress(account)] });
+            const res = await eth.request({ method: "eth_call", params: [{ to: addr, data }, "latest"] });
+            if (res) {
+              const balBig = BigInt(res);
+              setBalances((b) => ({ ...b, [addr]: formatUnits(balBig, dec) }));
+              continue;
+            }
+          } catch (e) {
+            // ignore
+          }
+        }
+
+        // final fallback
+        setBalances((b) => ({ ...b, [addr]: "0" }));
       } catch (e) {
-        // ignore per-token errors
         setBalances((b) => ({ ...b, [addr]: "0" }));
       }
     }
