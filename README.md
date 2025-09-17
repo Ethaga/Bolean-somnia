@@ -5,6 +5,7 @@
 🚀 **Bolean** is a decentralized finance (DeFi) web application built with modern technologies to provide a fast, secure, and transparent financial experience.  
 The live app is available here: 
 👉 https://bolean.netlify.app/
+ pitch deck: https://docs.google.com/presentation/d/1IP0ysmU07-KPT8gPXvRCkpque3Otv03G/edit?usp=sharing&ouid=108673152518857918711&rtpof=true&sd=true
 
 ---
 
