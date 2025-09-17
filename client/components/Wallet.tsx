@@ -73,7 +73,9 @@ export function WalletConnect() {
       return;
     }
     const accs = await eth.request({ method: "eth_requestAccounts" });
-    setAccount(accs?.[0]);
+    const acc = accs?.[0];
+    setAccount(acc);
+    window.dispatchEvent(new CustomEvent('bolean:accountChanged', { detail: acc }));
   }
 
   async function switchToSomnia() {
