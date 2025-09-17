@@ -10,7 +10,6 @@ import {
   getAddress,
   http,
   type Address,
-  type Hex,
 } from "viem";
 
 const publicClient = createPublicClient({ chain: somniaTestnet, transport: http() });
