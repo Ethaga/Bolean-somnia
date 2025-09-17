@@ -3,8 +3,11 @@ import { Button } from "@/components/ui/button";
 import { BOLEAN_ADDRESSES, somniaTestnet } from "@/lib/somnia";
 import { ERC20_ABI } from "@/lib/abi";
 import { createPublicClient, http, parseUnits } from "viem";
+import { toast } from "@/hooks/use-toast";
 
 const publicClient = createPublicClient({ chain: somniaTestnet, transport: http({ url: "/api/rpc" }) });
+
+function sleep(ms: number) { return new Promise((r) => setTimeout(r, ms)); }
 
 declare global {
   interface Window {
