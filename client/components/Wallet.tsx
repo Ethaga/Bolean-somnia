@@ -22,12 +22,17 @@ export function WalletConnect() {
     if (!eth) return;
 
     eth.request({ method: "eth_accounts" }).then((accounts: string[]) => {
-      if (accounts?.[0] && isAddress(accounts[0])) setAccount(accounts[0] as Address);
+      if (accounts?.[0] && isAddress(accounts[0])) {
+        setAccount(accounts[0] as Address);
+        window.dispatchEvent(new CustomEvent('bolean:accountChanged', { detail: accounts[0] }));
+      }
     });
     eth.request({ method: "eth_chainId" }).then((cid: string) => setChainId(cid));
 
     const handleAccountsChanged = (accs: string[]) => {
-      setAccount(accs?.[0] && isAddress(accs[0]) ? (accs[0] as Address) : null);
+      const acc = accs?.[0] && isAddress(accs[0]) ? (accs[0] as Address) : null;
+      setAccount(acc);
+      window.dispatchEvent(new CustomEvent('bolean:accountChanged', { detail: acc }));
     };
     const handleChainChanged = (cid: string) => {
       setChainId(cid);
