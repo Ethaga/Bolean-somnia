@@ -30,6 +30,7 @@ export function Header() {
           <a href="#deploy" className="hidden sm:block">
             <Button variant="ghost" className="hover:bg-accent/50">Deploy</Button>
           </a>
+          <SendToken />
           <WalletConnect />
         </div>
       </div>
