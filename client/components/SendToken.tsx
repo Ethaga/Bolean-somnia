@@ -1,0 +1,93 @@
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { BOLEAN_ADDRESSES, somniaTestnet } from "@/lib/somnia";
+import { ERC20_ABI } from "@/lib/abi";
+import { createPublicClient, http, parseUnits } from "viem";
+
+const publicClient = createPublicClient({ chain: somniaTestnet, transport: http({ url: "/api/rpc" }) });
+
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
+
+export default function SendToken() {
+  const tokenEntries = Object.entries(BOLEAN_ADDRESSES.tokens);
+  const [open, setOpen] = useState(false);
+  const [token, setToken] = useState(tokenEntries[0]?.[1] ?? "");
+  const [to, setTo] = useState("");
+  const [amount, setAmount] = useState("");
+  const [sending, setSending] = useState(false);
+
+  useEffect(() => {
+    if (!token && tokenEntries[0]) setToken(tokenEntries[0][1]);
+  }, [tokenEntries, token]);
+
+  async function send() {
+    if (!window.ethereum) return alert("No wallet detected");
+    if (!token || !to || !amount) return alert("Please fill token, recipient and amount");
+    try {
+      setSending(true);
+      const fromAccounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      const from = fromAccounts?.[0];
+      if (!from) throw new Error("No account available");
+
+      // get decimals
+      let decimals = 18;
+      try {
+        const dec = await publicClient.readContract({ address: token, abi: ERC20_ABI, functionName: "decimals" });
+        decimals = Number(dec ?? 18);
+      } catch (e) {
+        // fallback
+      }
+
+      const value = parseUnits(amount, decimals);
+      const { encodeFunctionData } = await import("viem");
+      const data = encodeFunctionData({ abi: ERC20_ABI as any, functionName: "transfer", args: [to, value] });
+
+      const params = [{ from, to: token, data }];
+      const txHash = await window.ethereum.request({ method: "eth_sendTransaction", params });
+      alert(`Transaction submitted: ${txHash}`);
+      setOpen(false);
+    } catch (err: any) {
+      console.error(err);
+      alert(`Send failed: ${err?.message ?? String(err)}`);
+    } finally {
+      setSending(false);
+    }
+  }
+
+  return (
+    <div className="flex items-center">
+      <Button variant="ghost" onClick={() => setOpen(true)} className="hidden sm:inline-block">Send Token</Button>
+
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="w-full max-w-md rounded-xl bg-card/90 p-6">
+            <h3 className="text-lg font-semibold">Send Token</h3>
+            <div className="mt-4 grid gap-3">
+              <label className="text-sm">Token</label>
+              <select value={token} onChange={(e) => setToken(e.target.value)} className="w-full rounded-md border p-2">
+                {tokenEntries.map(([key, addr]) => (
+                  <option key={addr} value={addr}>{key} — {addr}</option>
+                ))}
+              </select>
+
+              <label className="text-sm">Recipient address</label>
+              <input value={to} onChange={(e) => setTo(e.target.value)} className="w-full rounded-md border p-2" placeholder="0x..." />
+
+              <label className="text-sm">Amount</label>
+              <input value={amount} onChange={(e) => setAmount(e.target.value)} className="w-full rounded-md border p-2" placeholder="0.0" />
+
+              <div className="flex gap-2 justify-end mt-4">
+                <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+                <Button onClick={send} className="bg-gradient-to-r from-cyan-500 to-fuchsia-500 text-white" disabled={sending}>Confirm</Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
