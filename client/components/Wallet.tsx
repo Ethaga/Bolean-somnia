@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { somniaTestnet, SOMNIA_CHAIN_ID_HEX } from "@/lib/somnia";
 import { createPublicClient, formatEther, http, isAddress, type Address } from "viem";
 
-const publicClient = createPublicClient({ chain: somniaTestnet, transport: http() });
+const publicClient = createPublicClient({ chain: somniaTestnet, transport: http({ url: '/api/rpc' }) });
 
 declare global {
   interface Window {
