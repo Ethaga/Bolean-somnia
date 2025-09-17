@@ -37,7 +37,7 @@ function Hero() {
             Bolean — build DeFi that runs entirely on the Somnia Network
           </h1>
           <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-2xl">
-            Turn concepts into fully on‑chain dApps. Create lending markets like JustLend, designed for Somnia. Creativity & Originality. On‑chain Impact. Technical Excellence.
+            Build and deploy fully on‑chain dApps on Somnia Testnet with Bolean — create lending markets, experiments, and production protocols.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <a href="#markets"><Button className="bg-gradient-to-r from-cyan-500 to-fuchsia-500 text-white">Launch App</Button></a>
