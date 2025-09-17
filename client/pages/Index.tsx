@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { BOLEAN_ADDRESSES, somniaTestnet } from "@/lib/somnia";
 import { ERC20_ABI } from "@/lib/abi";
 import { useEffect, useMemo, useState } from "react";
+import { toast } from "@/hooks/use-toast";
 import {
   createPublicClient,
   formatUnits,
