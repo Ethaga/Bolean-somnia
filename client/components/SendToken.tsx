@@ -51,8 +51,34 @@ export default function SendToken() {
 
       const params = [{ from, to: token, data }];
       const txHash = await window.ethereum.request({ method: "eth_sendTransaction", params });
-      alert(`Transaction submitted: ${txHash}`);
       setOpen(false);
+
+      const t = toast({ title: "Transaction submitted", description: txHash as string });
+
+      // Poll for receipt
+      (async () => {
+        try {
+          const max = 40; // ~2 minutes
+          for (let i = 0; i < max; i++) {
+            const receipt = await publicClient.getTransactionReceipt({ hash: txHash as `0x${string}` }).catch(() => null);
+            if (receipt) {
+              if ((receipt as any).status === 1) {
+                t.update({ title: "Transaction confirmed", description: txHash as string });
+              } else {
+                t.update({ title: "Transaction failed", description: txHash as string });
+              }
+              // notify app to refresh balances
+              window.dispatchEvent(new Event("bolean:refreshBalances"));
+              return;
+            }
+            await sleep(3000);
+          }
+          t.update({ title: "Transaction pending", description: "Still pending after timeout" });
+        } catch (err) {
+          t.update({ title: "Error checking tx", description: String(err) });
+        }
+      })();
+
     } catch (err: any) {
       console.error(err);
       alert(`Send failed: ${err?.message ?? String(err)}`);
