@@ -78,6 +78,12 @@ export function WalletConnect() {
     window.dispatchEvent(new CustomEvent('bolean:accountChanged', { detail: acc }));
   }
 
+  function disconnect() {
+    // No standard programmatic disconnect for injected wallets; clear local state
+    setAccount(null);
+    window.dispatchEvent(new CustomEvent('bolean:accountChanged', { detail: null }));
+  }
+
   async function switchToSomnia() {
     const eth = window.ethereum;
     if (!eth) return;
