@@ -27,6 +27,7 @@ export const BOLEAN_ADDRESSES = {
     tokenA: "0x841b8199E6d3Db3C6f264f6C2bd8848b3cA64223",
     tokenB: "0x0000000071727De22E5E9d8BAf0edAc6f37da032",
     tokenC: "0x4be0ddfebca9a5a4a617dee4dece99e7c862dceb",
+    tokenD: "0x65296738D4E5edB1515e40287B6FDf8320E6eE04",
   },
 } as const;
 
