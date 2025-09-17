@@ -171,11 +171,24 @@ function Markets({ account }: { account: Address | null }) {
             Supply and borrow assets on Somnia. Connect your wallet to see balances. Actions are read‑only in this demo until contracts are fully deployed for Bolean.
           </p>
         </div>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" onClick={() => loadBalances()}>Refresh balances</Button>
+        </div>
       </div>
       <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-5">
         {tokenAddresses.map((addr) => {
           const sym = symbols[addr] ?? "Token";
           const bal = balances[addr];
+
+          function formatDisplayAmount(s?: string) {
+            if (!s) return "0";
+            const n = Number(s);
+            if (!Number.isFinite(n)) return s;
+            // show up to 6 decimals, and thousands separator
+            const opts: Intl.NumberFormatOptions = { maximumFractionDigits: 6 };
+            return n.toLocaleString(undefined, opts);
+          }
+
           return (
             <div key={addr} className="rounded-xl border border-border/60 bg-card/60 p-5 shadow-sm backdrop-blur">
               <div className="flex items-center justify-between">
@@ -185,9 +198,13 @@ function Markets({ account }: { account: Address | null }) {
                 </a>
               </div>
               <div className="mt-4 text-sm text-muted-foreground break-all">{addr}</div>
-              <div className="mt-4 flex items-center justify-between">
+              <div className="mt-4">
                 <div className="text-sm text-muted-foreground">Your balance</div>
-                <div className="font-mono font-semibold">{bal ? Number(bal).toFixed(4) : "–"} {sym}</div>
+                <div className="mt-1 flex items-baseline gap-3">
+                  <div className="font-mono text-lg font-semibold">{bal ? formatDisplayAmount(bal) : (account ? '0' : 'Connect wallet')}</div>
+                  <div className="text-sm text-muted-foreground">{sym}</div>
+                </div>
+                <div className="text-xs text-muted-foreground mt-1">Decimals: {decimals[addr] ?? 18}</div>
               </div>
               <div className="mt-4 grid grid-cols-3 gap-3">
                 <Button disabled className="bg-gradient-to-r from-cyan-500 to-fuchsia-500 text-white">Supply</Button>
