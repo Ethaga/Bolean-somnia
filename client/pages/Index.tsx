@@ -130,7 +130,7 @@ function Markets({ account }: { account: Address | null }) {
             <div key={addr} className="rounded-xl border border-border/60 bg-card/60 p-5 shadow-sm backdrop-blur">
               <div className="flex items-center justify-between">
                 <div className="text-lg font-semibold">{sym}</div>
-                <a className="text-xs text-primary hover:underline" href={`https://somnia-testnet.socialscan.io/address/${addr}`} target="_blank" rel="noreferrer">
+                <a className="text-xs text-primary hover:underline" href={`https://shannon-explorer.somnia.network/address/${addr}`} target="_blank" rel="noreferrer">
                   View on Explorer
                 </a>
               </div>
@@ -180,7 +180,7 @@ function Architecture() {
           <g>
             <rect x="800" y="40" width="340" height="110" rx="16" fill="#22d3ee" opacity="0.12" stroke="url(#g1)" />
             <text x="820" y="90" fontSize="24" fontWeight="700" fill="currentColor">Block Explorer</text>
-            <text x="820" y="120" fontSize="16" fill="currentColor">Somnia SocialScan</text>
+            <text x="820" y="120" fontSize="16" fill="currentColor">Shannon Explorer</text>
           </g>
 
           <g>
@@ -242,7 +242,7 @@ function Contracts() {
           <div key={e.addr} className="flex items-center justify-between gap-4 rounded-xl border border-border/60 bg-card/60 p-4 shadow-sm">
             <div className="min-w-24 font-medium">{e.label}</div>
             <code className="flex-1 break-all text-sm">{e.addr}</code>
-            <a className="text-primary text-sm hover:underline" target="_blank" rel="noreferrer" href={`https://somnia-testnet.socialscan.io/address/${e.addr}`}>Explorer</a>
+            <a className="text-primary text-sm hover:underline" target="_blank" rel="noreferrer" href={`https://shannon-explorer.somnia.network/address/${e.addr}`}>Explorer</a>
           </div>
         ))}
       </div>
