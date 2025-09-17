@@ -375,6 +375,20 @@ export default function Index() {
       <Section id="docs" className="py-16 md:py-24">
         <Docs />
       </Section>
+
+      <Section id="tokens" className="py-16 md:py-24">
+        <div className="container mx-auto">
+          <h2 className="text-2xl md:text-3xl font-bold">Tokens on Somnia Testnet</h2>
+          <p className="mt-2 text-muted-foreground max-w-2xl">Notable tokens deployed on Somnia Testnet and explorer links.</p>
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <a className="group rounded-xl border border-border/60 bg-card/60 p-6 shadow-sm hover:border-primary/60" href="https://shannon-explorer.somnia.network/token/0x65296738D4E5edB1515e40287B6FDf8320E6eE04" target="_blank" rel="noreferrer">
+              <div className="text-lg font-semibold">0x6529...EE04</div>
+              <div className="mt-2 text-muted-foreground">View token on Shannon Explorer</div>
+              <div className="mt-4 text-sm text-muted-foreground break-all">https://shannon-explorer.somnia.network/token/0x65296738D4E5edB1515e40287B6FDf8320E6eE04</div>
+            </a>
+          </div>
+        </div>
+      </Section>
     </Layout>
   );
 }
