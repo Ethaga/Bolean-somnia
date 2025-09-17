@@ -8,6 +8,7 @@ import {
   createPublicClient,
   formatUnits,
   getAddress,
+  parseUnits,
   http,
   type Address,
 } from "viem";
