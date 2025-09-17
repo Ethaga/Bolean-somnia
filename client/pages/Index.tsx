@@ -130,6 +130,8 @@ function Markets({ account }: { account: Address | null }) {
     setSendOpen(true);
   }
 
+  function sleep(ms: number) { return new Promise((r) => setTimeout(r, ms)); }
+
   async function sendToken() {
     if (!sendTokenAddr || !sendTo || !sendAmount) return alert("Please provide recipient and amount");
     const eth = (window as any).ethereum;
@@ -148,13 +150,33 @@ function Markets({ account }: { account: Address | null }) {
 
       const params = [{ from, to: sendTokenAddr, data }];
       const txHash = await eth.request({ method: "eth_sendTransaction", params });
-      alert(`Transaction submitted: ${txHash}`);
       setSendOpen(false);
-      // refresh balances after a short delay
-      setTimeout(() => {
-        // re-run balances load by toggling account state (simpler: reload page)
-        window.location.reload();
-      }, 3000);
+
+      const t = toast({ title: "Transaction submitted", description: txHash as string });
+
+      // poll for receipt
+      (async () => {
+        try {
+          const max = 40;
+          for (let i = 0; i < max; i++) {
+            const receipt = await publicClient.getTransactionReceipt({ hash: txHash as `0x${string}` }).catch(() => null);
+            if (receipt) {
+              if ((receipt as any).status === 1) {
+                t.update({ title: "Transaction confirmed", description: txHash as string });
+              } else {
+                t.update({ title: "Transaction failed", description: txHash as string });
+              }
+              window.dispatchEvent(new Event("bolean:refreshBalances"));
+              return;
+            }
+            await sleep(3000);
+          }
+          t.update({ title: "Transaction pending", description: "Still pending after timeout" });
+        } catch (err) {
+          t.update({ title: "Error checking tx", description: String(err) });
+        }
+      })();
+
     } catch (err: any) {
       console.error(err);
       alert(`Send failed: ${err?.message ?? String(err)}`);
