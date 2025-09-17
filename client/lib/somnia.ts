@@ -12,8 +12,8 @@ export const somniaTestnet: Chain = {
     public: { http: ["https://testnet.somnia.network/"] },
   },
   blockExplorers: {
-    default: { name: "Somnia Explorer", url: "https://somnia-testnet.socialscan.io/" },
-    socialscan: { name: "SocialScan", url: "https://somnia-testnet.socialscan.io/" },
+    default: { name: "Shannon Explorer", url: "https://shannon-explorer.somnia.network/" },
+    shannon: { name: "Shannon Explorer", url: "https://shannon-explorer.somnia.network/" },
   },
 };
 
