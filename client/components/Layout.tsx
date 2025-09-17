@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { WalletConnect } from "@/components/Wallet";
+import SendToken from "@/components/SendToken";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
