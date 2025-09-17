@@ -21,14 +21,36 @@ export function Header() {
           <Logo />
         </a>
         <nav className="hidden md:flex items-center gap-8 text-sm">
-          <a href="#markets" className="text-muted-foreground hover:text-foreground">Markets</a>
-          <a href="#architecture" className="text-muted-foreground hover:text-foreground">Architecture</a>
-          <a href="#contracts" className="text-muted-foreground hover:text-foreground">Contracts</a>
-          <a href="#docs" className="text-muted-foreground hover:text-foreground">Docs</a>
+          <a
+            href="#markets"
+            className="text-muted-foreground hover:text-foreground"
+          >
+            Markets
+          </a>
+          <a
+            href="#architecture"
+            className="text-muted-foreground hover:text-foreground"
+          >
+            Architecture
+          </a>
+          <a
+            href="#contracts"
+            className="text-muted-foreground hover:text-foreground"
+          >
+            Contracts
+          </a>
+          <a
+            href="#docs"
+            className="text-muted-foreground hover:text-foreground"
+          >
+            Docs
+          </a>
         </nav>
         <div className="flex items-center gap-3">
           <a href="#deploy" className="hidden sm:block">
-            <Button variant="ghost" className="hover:bg-accent/50">Deploy</Button>
+            <Button variant="ghost" className="hover:bg-accent/50">
+              Deploy
+            </Button>
           </a>
           <SendToken />
           <WalletConnect />
@@ -47,8 +69,18 @@ export function Footer() {
           © {new Date().getFullYear()} Bolean on Somnia. All rights reserved.
         </div>
         <div className="flex gap-4 text-sm">
-          <a className="hover:text-foreground text-muted-foreground" href="#privacy">Privacy</a>
-          <a className="hover:text-foreground text-muted-foreground" href="#terms">Terms</a>
+          <a
+            className="hover:text-foreground text-muted-foreground"
+            href="#privacy"
+          >
+            Privacy
+          </a>
+          <a
+            className="hover:text-foreground text-muted-foreground"
+            href="#terms"
+          >
+            Terms
+          </a>
         </div>
       </div>
     </footer>

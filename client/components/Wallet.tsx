@@ -1,9 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { somniaTestnet, SOMNIA_CHAIN_ID_HEX } from "@/lib/somnia";
-import { createPublicClient, formatEther, http, isAddress, type Address } from "viem";
+import {
+  createPublicClient,
+  formatEther,
+  http,
+  isAddress,
+  type Address,
+} from "viem";
 
-const publicClient = createPublicClient({ chain: somniaTestnet, transport: http({ url: '/api/rpc' }) });
+const publicClient = createPublicClient({
+  chain: somniaTestnet,
+  transport: http({ url: "/api/rpc" }),
+});
 
 declare global {
   interface Window {
@@ -15,7 +24,8 @@ export function WalletConnect() {
   const [account, setAccount] = useState<Address | null>(null);
   const [chainId, setChainId] = useState<string | null>(null);
   const [balance, setBalance] = useState<string | null>(null);
-  const isOnSomnia = chainId?.toLowerCase() === SOMNIA_CHAIN_ID_HEX.toLowerCase();
+  const isOnSomnia =
+    chainId?.toLowerCase() === SOMNIA_CHAIN_ID_HEX.toLowerCase();
 
   useEffect(() => {
     const eth = window.ethereum;
@@ -24,15 +34,21 @@ export function WalletConnect() {
     eth.request({ method: "eth_accounts" }).then((accounts: string[]) => {
       if (accounts?.[0] && isAddress(accounts[0])) {
         setAccount(accounts[0] as Address);
-        window.dispatchEvent(new CustomEvent('bolean:accountChanged', { detail: accounts[0] }));
+        window.dispatchEvent(
+          new CustomEvent("bolean:accountChanged", { detail: accounts[0] }),
+        );
       }
     });
-    eth.request({ method: "eth_chainId" }).then((cid: string) => setChainId(cid));
+    eth
+      .request({ method: "eth_chainId" })
+      .then((cid: string) => setChainId(cid));
 
     const handleAccountsChanged = (accs: string[]) => {
       const acc = accs?.[0] && isAddress(accs[0]) ? (accs[0] as Address) : null;
       setAccount(acc);
-      window.dispatchEvent(new CustomEvent('bolean:accountChanged', { detail: acc }));
+      window.dispatchEvent(
+        new CustomEvent("bolean:accountChanged", { detail: acc }),
+      );
     };
     const handleChainChanged = (cid: string) => {
       setChainId(cid);
@@ -75,13 +91,17 @@ export function WalletConnect() {
     const accs = await eth.request({ method: "eth_requestAccounts" });
     const acc = accs?.[0];
     setAccount(acc);
-    window.dispatchEvent(new CustomEvent('bolean:accountChanged', { detail: acc }));
+    window.dispatchEvent(
+      new CustomEvent("bolean:accountChanged", { detail: acc }),
+    );
   }
 
   function disconnect() {
     // No standard programmatic disconnect for injected wallets; clear local state
     setAccount(null);
-    window.dispatchEvent(new CustomEvent('bolean:accountChanged', { detail: null }));
+    window.dispatchEvent(
+      new CustomEvent("bolean:accountChanged", { detail: null }),
+    );
   }
 
   async function switchToSomnia() {
@@ -94,7 +114,10 @@ export function WalletConnect() {
       });
     } catch (switchError: any) {
       // 4902 = chain not added
-      if (switchError?.code === 4902 || switchError?.message?.includes?.("Unrecognized chain ID")) {
+      if (
+        switchError?.code === 4902 ||
+        switchError?.message?.includes?.("Unrecognized chain ID")
+      ) {
         await eth.request({
           method: "wallet_addEthereumChain",
           params: [
@@ -124,13 +147,19 @@ export function WalletConnect() {
         </Button>
       )}
       {!isOnSomnia && (
-        <Button onClick={switchToSomnia} className="bg-gradient-to-r from-cyan-500 to-fuchsia-500 text-white">
+        <Button
+          onClick={switchToSomnia}
+          className="bg-gradient-to-r from-cyan-500 to-fuchsia-500 text-white"
+        >
           Switch to Somnia
         </Button>
       )}
       {isOnSomnia && balance && (
         <div className="text-sm text-muted-foreground">
-          Balance: <span className="font-mono font-semibold text-foreground">{Number(balance).toFixed(4)} STT</span>
+          Balance:{" "}
+          <span className="font-mono font-semibold text-foreground">
+            {Number(balance).toFixed(4)} STT
+          </span>
         </div>
       )}
     </div>
