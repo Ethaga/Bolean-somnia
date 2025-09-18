@@ -22,6 +22,11 @@ The live app is available here:
 - **Deployment:** Netlify  
 - **Blockchain Integration:** Somnia Network (Testnet)
 
+- demo Video: https://youtube.com/shorts/uUEs2KjTSjc?si=gAgr9NpQ4O8OEQph
+- # pitch deck: https://docs.google.com/presentation/d/1IP0ysmU07-KPT8gPXvRCkpque3Otv03G/edit?usp=sharing&ouid=108673152518857918711&rtpof=true&sd=true
+
+
+
 ---
 
 ## 🚀 Getting Started
@@ -44,7 +49,7 @@ For major changes, please open an issue first to discuss what you would like to 
 
 
 ---
-# pitch deck: https://docs.google.com/presentation/d/1IP0ysmU07-KPT8gPXvRCkpque3Otv03G/edit?usp=sharing&ouid=108673152518857918711&rtpof=true&sd=true
+pitch deck: https://docs.google.com/presentation/d/1IP0ysmU07-KPT8gPXvRCkpque3Otv03G/edit?usp=sharing&ouid=108673152518857918711&rtpof=true&sd=true
 
 
 
